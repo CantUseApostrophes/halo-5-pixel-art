@@ -13,9 +13,13 @@ target_size = [] # stores the dimensions of the resized image
 # Options
 adjust_for_eyes = True # Adjusts color matching algorithm to account for how human eyes work
 
-resample_mode = Image.NEAREST # How image should be resampled when resized (BICUBIC, LANCZOS, BILINEAR, NEAREST)
+resample_mode = Image.BICUBIC # How image should be resampled when resized (BICUBIC, LANCZOS, BILINEAR, NEAREST)
 
 print_info = False
+
+native_res = False # Only if the original image is within resolution constraints
+
+max_resolution = 1600 # Keep in mind that Forge's max object count is 1600
 
 def printInfo():
     print 'Image dimensions:', image.width, 'x', image.height
@@ -34,9 +38,11 @@ def printInfo():
 def resizeImage():
     global image, target_size
 
-    target_res = raw_input('Max resolution: ') # Keep in mind that Forge's max object count is 1600
-
-    resize_factor = math.sqrt(image.width * image.height / float(target_res))
+    if native_res:
+        resize_factor = 1
+    else:
+        target_res = max_resolution
+        resize_factor = math.sqrt(image.width * image.height / float(target_res))
 
     target_size = [int(image.width / resize_factor), int(image.height / resize_factor)]
 
