@@ -1,25 +1,46 @@
 from colors import color_names, colors_rgb
 from PIL import Image
-import math
+import math, ConfigParser, io
 
-fname = 'input.png' # image filename
+# Loads the configuration file
+with open("config.ini") as f:
+    sample_config = f.read()
+config = ConfigParser.RawConfigParser(allow_no_value=True)
+config.readfp(io.BytesIO(sample_config))
 
-image = Image.open(fname)
+### Options ###
+# See config.ini for comments describing each option
+input_name = config.get('options', 'input_filename')
+
+output_name = config.get('options', 'output_filename')
+
+instructions_name = config.get('options', 'instructions_filename')
+
+adjust_for_eyes = config.getboolean('options', 'adjust_for_eyes')
+
+resample_mode = config.get('options', 'resample_mode')
+if resample_mode.lower() == 'bicubic':
+    resample_mode = Image.BICUBIC
+elif resample_mode.lower() == 'lanczos':
+    resample_mode = Image.LANCZOS
+elif resample_mode.lower() == 'bilinear':
+    resample_mode = Image.BILINEAR
+elif resample_mode.lower() == 'nearest':
+    resample_mode = Image.NEAREST
+
+print_info = config.getboolean('options', 'print_info')
+
+native_res = config.getboolean('options', 'native_resolution')
+
+max_resolution = config.getint('options', 'max_resolution')
+
+
+
+image = Image.open(input_name)
 
 results = [] # stores a list of colors
 
 target_size = [] # stores the dimensions of the resized image
-
-# Options
-adjust_for_eyes = True # Adjusts color matching algorithm to account for how human eyes work
-
-resample_mode = Image.BICUBIC # How image should be resampled when resized (BICUBIC, LANCZOS, BILINEAR, NEAREST)
-
-print_info = False
-
-native_res = False # Only if the original image is within resolution constraints
-
-max_resolution = 1600 # Keep in mind that Forge's max object count is 1600
 
 def printInfo():
     print 'Image dimensions:', image.width, 'x', image.height
@@ -98,7 +119,7 @@ def slimResults():
         i += 1
 
 def writeInstructions():
-    f = open('Instructions.txt','w')
+    f = open(instructions_name,'w')
     output = ''
     for i in range(0, len(results)):
         if results[i] != 'break':
@@ -121,3 +142,5 @@ def main():
 main()
 
 image.save('output.png')
+
+print 'Image successfully converted.'
