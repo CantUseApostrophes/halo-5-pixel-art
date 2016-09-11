@@ -34,6 +34,7 @@ native_res = config.getboolean('options', 'native_resolution')
 
 max_resolution = config.getint('options', 'max_resolution')
 
+instructions_mode = config.getint('options', 'instructions_mode')
 
 
 image = Image.open(input_name)
@@ -97,7 +98,15 @@ def nearestColor(rgb1):
         if dist < min_dist:
             min_dist = dist
             mindex = i
-    results.append(color_names[mindex]) # Builds list of colors using with names that Halo 5 uses
+    if instructions_mode == 0 or instructions_mode == 3:
+        # Builds list of colors using with names that Halo 5 uses
+        results.append(color_names[mindex])
+    elif instructions_mode == 1:
+        # Adds the index of each color to make it easier to find in horizontal scrolling color picker
+        results.append('('+str(mindex+1)+')'+color_names[mindex])
+    else:
+        # Adds row and column numbers of each color to make it easier to find in PC color picker menu
+        results.append('('+str(mindex/4+1)+','+str(mindex%4+1)+')'+color_names[mindex])
     return (colors_rgb[mindex][0], colors_rgb[mindex][1], colors_rgb[mindex][2])
 
 def slimResults():
@@ -133,11 +142,12 @@ def writeInstructions():
 
 def main():
     if print_info:
-        printInfo()         # Prints info about the max dimensions of the image
-    resizeImage()           # Resizes the image and stores the dimensions
-    adjustColors()          # Finds the nearest color of each pixel, and creates a list of the color names
-    slimResults()           # If there are multiple of the same color in a row, combine into one entry
-    writeInstructions()     # Outputs the names of the colors to a text file
+        printInfo()             # Prints info about the max dimensions of the image
+    resizeImage()               # Resizes the image and stores the dimensions
+    adjustColors()              # Finds the nearest color of each pixel, and creates a list of the color names
+    if instructions_mode != 3:
+        slimResults()           # If there are multiple of the same color in a row, combine into one entry
+    writeInstructions()         # Outputs the names of the colors to a text file
     image.save('output.png')
     print 'Image successfully converted.'
 
