@@ -138,9 +138,7 @@ def main():
     adjustColors()          # Finds the nearest color of each pixel, and creates a list of the color names
     slimResults()           # If there are multiple of the same color in a row, combine into one entry
     writeInstructions()     # Outputs the names of the colors to a text file
+    image.save('output.png')
+    print 'Image successfully converted.'
 
 main()
-
-image.save('output.png')
-
-print 'Image successfully converted.'
