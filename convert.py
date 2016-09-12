@@ -104,9 +104,11 @@ def nearestColor(rgb1):
     elif instructions_mode == 1:
         # Adds the index of each color to make it easier to find in horizontal scrolling color picker
         results.append('('+str(mindex+1)+')'+color_names[mindex])
-    else:
+    elif instructions_mode == 2:
         # Adds row and column numbers of each color to make it easier to find in PC color picker menu
         results.append('('+str(mindex/4+1)+','+str(mindex%4+1)+')'+color_names[mindex])
+    else:
+        results.append([mindex, 1])
     return (colors_rgb[mindex][0], colors_rgb[mindex][1], colors_rgb[mindex][2])
 
 def slimResults():
@@ -127,6 +129,40 @@ def slimResults():
                 results.pop(i+1)
         i += 1
 
+def slimResults_AHK():
+    global results
+    # Inserts 'break' into the list to signify the end of a row
+    for i in range(len(results), -1, -1):
+        if i % target_size[0] == 0 and i != 0:
+            results.insert(i, 'break')
+    i = 0
+    # Let's say there are 6 reds in a row, this will make them into a 4-long block and a 2-long block
+    while i < len(results):
+        n = 1
+        while i < len(results) - n and results[i] == results[i+n] and results[i+n] != 'break':
+            n += 1
+        if n > 1:
+            temp_color = results[i][0]
+            index_adjust = 0 # Need to adjust index each loop so that we don't "slim" data more than once
+            for j in range(0, n):
+                results.pop(i)
+            for j in range(0, n/4):
+                results.insert(i, [temp_color, 4])
+            index_adjust += n/4
+            if n%4 == 1:
+                results.insert(i+n/4, [temp_color, 1])
+                index_adjust += 1
+            elif n%4 == 2:
+                results.insert(i+n/4, [temp_color, 2])
+                index_adjust += 1
+            elif n%4 == 3:
+                results.insert(i+n/4, [temp_color, 2])
+                results.insert(i+n/4+1, [temp_color, 1])
+                index_adjust += 2
+            i += index_adjust
+        else:
+            i += 1
+
 def writeInstructions():
     f = open(instructions_name,'w')
     output = ''
@@ -140,14 +176,31 @@ def writeInstructions():
     f.write(output)
     f.close()
 
+def generateAHK():
+    f = open('build_image.ahk','w')
+    output = ''
+    for i in range(0, len(results)):
+        if results[i] != 'break':
+            output += str(results[i][0]) + ',' + str(results[i][1])
+            if i + 1 < len(results) and results[i+1] != 'break':
+                output += ' | '
+        else:
+            output += '\n\n'
+    f.write(output)
+    f.close()
+
 def main():
     if print_info:
         printInfo()             # Prints info about the max dimensions of the image
     resizeImage()               # Resizes the image and stores the dimensions
     adjustColors()              # Finds the nearest color of each pixel, and creates a list of the color names
-    if instructions_mode != 3:
+    if instructions_mode != 3 and instructions_mode != 4:
         slimResults()           # If there are multiple of the same color in a row, combine into one entry
-    writeInstructions()         # Outputs the names of the colors to a text file
+    if instructions_mode == 4:
+        slimResults_AHK()
+        generateAHK()
+    else:
+        writeInstructions()         # Outputs the names of the colors to a text file
     image.save('output.png')
     print 'Image successfully converted.'
 
