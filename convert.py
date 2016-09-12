@@ -162,6 +162,8 @@ def slimResults_AHK():
             i += index_adjust
         else:
             i += 1
+    if print_info:
+        print 'Object count:', len(results)
 
 def writeInstructions():
     f = open(instructions_name,'w')
@@ -178,14 +180,49 @@ def writeInstructions():
 
 def generateAHK():
     f = open('build_image.ahk','w')
-    output = ''
+    row = 0
+    col = 0
+    coords = [target_size[0]*(-1), 0, target_size[1]*2-250]
+    output = '{Escape}::ExitApp\n' # Sets Esc key to terminate script
+    # Clicks the plus button, then Primitives, then 2'
+    output += 'Click 1750, 40\nSleep 100\nClick 1560, 230\nSleep 100\nClick 1560, 200\nSleep 100\n'
     for i in range(0, len(results)):
-        if results[i] != 'break':
-            output += str(results[i][0]) + ',' + str(results[i][1])
-            if i + 1 < len(results) and results[i+1] != 'break':
-                output += ' | '
+        if results[i] == 'break':
+            row += 1
+            col = 0
         else:
-            output += '\n\n'
+            coords = [target_size[0]*(-1)+col*2, 0, target_size[1]*2-250-row*2]
+            if results[i][1] == 1:
+                output += 'Click 1560, 240\nSleep 100\n' # Spawn 1-pixel block (2'x2'x2')
+                col += 1
+            elif results[i][1] == 2:
+                output += 'Click 1560, 265\nSleep 100\n' # Spawn 2-pixel block (2'x2'x4')
+                col += 2
+            elif results[i][1] == 4:
+                output += 'Click 1560, 295\nSleep 100\n' # Spawn 4-pixel block (2'x2'x8')
+                col += 4
+            #Clicks the Object Properties button
+            output += 'Click 1850, 40\nSleep 100\n'
+            if i == 0:
+                output += 'PixelGetColor, color, 1533, 143\nif (color = "0x000000")\n{\n\tClick 1530, 150\n\tSleep 100\n}\n'
+            output += 'Loop '+str(23+results[i][0])+' {\n\tClick 1856, 455\n\tSleep 50\n}\n' #
+            output += 'Loop '+str(23+results[i][0])+' {\n\tClick 1856, 483\n\tSleep 50\n}\n' # Sets colors
+            output += 'Loop '+str(23+results[i][0])+' {\n\tClick 1856, 511\n\tSleep 50\n}\n' #
+            output += 'Loop 5 {\n\tClick 1856, 567\n\tSleep 50\n}\n' #
+            output += 'Loop 5 {\n\tClick 1856, 595\n\tSleep 50\n}\n' # Sets matte/metallic to 10
+            output += 'Loop 5 {\n\tClick 1856, 623\n\tSleep 50\n}\n' #
+            output += 'Click 1560, 315\nSleep 100\n' # Click Rotation
+            output += 'Click 1830, 207\nSleep 100\n' # Click pitch left arrow
+            output += 'Click 1518, 80\nSleep 100\n' # Click the back button
+            output += 'Click 1560, 285\nSleep 100\n' # Click Position
+            output += 'Click 1813, 177\nSleep 100\n' # Click X field
+            output += 'Send ' + str(coords[0]) + '{Enter}\nSleep 100\n' # Enter X coordinates
+            output += 'Click 1813, 205\nSleep 100\n' # Click Y field
+            output += 'Send ' + str(coords[1]) + '{Enter}\nSleep 100\n' # Enter Y coordinates
+            output += 'Click 1813, 233\nSleep 100\n' # Click Z field
+            output += 'Send ' + str(coords[2]) + '{Enter}\nSleep 100\n' # Enter Z coordinates
+            output += 'Click 1750, 40\nSleep 100\n' # Click plus button
+    output += 'Send {Escape}'
     f.write(output)
     f.close()
 
