@@ -129,12 +129,12 @@ scroll(n) {
 
 dragBar(n) {
     Loop {
-        MoveMouse 1457, 150, 0
+        MouseMove 1457, 150, 0
         Sleep 200
         Click 1457, 150, down
         Sleep 100
         var := 150 + (n*11)
-        MoveMouse 1457, %var%, 5
+        MouseMove 1457, %var%, 5
         Sleep 100
         Click 1457, %var%, up
         PixelGetColor color, 1450, 95, RGB
