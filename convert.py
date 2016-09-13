@@ -201,11 +201,11 @@ def generateAHK():
                 n = results[i][0]
                 colorCoords = [1189 + (n%4)*74, 112 + (n/4)*36]
                 if n < 40:
-                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+', '+str(colorCoords[0]+31)+', '+str(colorCoords[1]-12)+')\n'
+                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+')\n'
                 else:
                     output += 'MouseMove '+str(colorCoords[0])+', 443, 0\n'
                     output += 'scroll('+str((n/4)-10)+')\n'
-                    output += 'clickColor('+str(colorCoords[0])+', 443, '+str(colorCoords[0]+31)+', 416)\n'
+                    output += 'clickColor('+str(colorCoords[0])+', 443)\n'
             output += 'clickRotation()\n'
             output += 'clickField1()\n'
             output += 'input(0)\n'
