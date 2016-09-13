@@ -1,0 +1,136 @@
+click(x, y) {
+    MouseMove x, y, 0
+    Sleep 100
+    Click x, y, down
+    Sleep 250
+    Click x, y, up
+}
+
+checkClick(x1, y1, x2, y2, color) {
+    Loop {
+        click(x1, y1)
+        Sleep 100
+        PixelGetColor px, x2, y2, RGB
+        if (px = color) {
+            Break
+        }
+    }
+}
+
+checkClick2(x1, y1, x2, y2, color) {
+    Loop {
+        click(x1, y1)
+        Sleep 100
+        PixelGetColor px, x2, y2, RGB
+        if (px != color) {
+            Break
+        }
+    }
+}
+
+clickPlus() {
+    checkClick(1750, 40, 1600, 120, "0x636363")
+}
+
+clickPrimitives() {
+    checkClick(1560, 230, 1605, 120, "0xFFFFFF")
+}
+
+clickSimple() {
+    checkClick(1560, 200, 1600, 150, "0x636363")
+}
+
+click2ft() {
+    checkClick(1560, 205, 1600, 180, "0x636363")
+}
+
+checkPlusMenu() {
+    PixelGetColor color, 1600, 180, RGB
+    if (color != "0x636363") {
+        goToBlocks()
+    }
+}
+
+goToBlocks() {
+    clickPrimitives()
+    clickSimple()
+    click2ft()
+}
+
+clickBlock1() {
+    checkClick(1560, 240, 1600, 180, "0x636363")
+}
+
+clickBlock2() {
+    checkClick(1560, 265, 1600, 180, "0x636363")
+}
+
+clickBlock4() {
+    checkClick(1560, 295, 1600, 180, "0x636363")
+}
+
+clickProperties() {
+    checkClick(1850, 40, 1600, 80, "0x303030")
+}
+
+clickRotation() {
+    checkClick(1560, 315, 1602, 150, "0x646464")
+}
+
+clickArrowToPosition() {
+    checkClick(1855, 150, 1530, 154, "0xFDFDFD")
+}
+
+clickField1() {
+    checkClick(1813, 177, 1752, 188, "0x3399FF")
+}
+
+clickField2() {
+    checkClick(1813, 205, 1752, 216, "0x3399FF")
+}
+
+clickField3() {
+    checkClick(1813, 233, 1752, 244, "0x3399FF")
+}
+
+clickPrimary() {
+    checkClick(1800, 455, 1450, 100, "0x1A1A1A")
+}
+
+clickSecondary() {
+    checkClick(1800, 485, 1450, 100, "0x1A1A1A")
+}
+
+clickTertiary() {
+    checkClick(1800, 510, 1450, 100, "0x1A1A1A")
+}
+
+clickColorArrow() {
+    checkClick(1460, 75, 1450, 1165, 79, "0xFFFFFF")
+}
+
+clickColor(x1, y1) {
+  Loop {
+      click(x1, y1)
+      Sleep 100
+      PixelGetColor px, 1450, 100, RGB
+      if (px != "0x4D4D4D" and px != "0x1A1A1A") {
+          Break
+      }
+  }
+}
+
+scroll(n) {
+    Loop %n% {
+        Sleep 100
+        Click WheelDown
+    }
+}
+
+input(txt) {
+    Send, %txt%
+}
+
+Sleep 5000
+SendMode Event
+BlockInput MouseMove
