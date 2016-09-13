@@ -1,6 +1,6 @@
 click(x, y) {
     MouseMove %x%, %y%, 0
-    Sleep 100
+    Sleep 200
     Click %x%, %y%, down
     Sleep 250
     Click %x%, %y%, up
@@ -9,7 +9,7 @@ click(x, y) {
 checkClick(x1, y1, x2, y2, color) {
     Loop {
         click(x1, y1)
-        Sleep 100
+        Sleep 200
         PixelGetColor px, %x2%, %y2%, RGB
         if (px = color) {
             Break
@@ -20,7 +20,7 @@ checkClick(x1, y1, x2, y2, color) {
 checkClick2(x1, y1, x2, y2, color) {
     Loop {
         click(x1, y1)
-        Sleep 100
+        Sleep 200
         PixelGetColor px, %x2%, %y2%, RGB
         if (px != color) {
             Break
@@ -58,15 +58,15 @@ goToBlocks() {
 }
 
 clickBlock1() {
-    checkClick(1560, 240, 1600, 180, "0x636363")
+    checkClick2(1560, 240, 1600, 180, "0x636363")
 }
 
 clickBlock2() {
-    checkClick(1560, 265, 1600, 180, "0x636363")
+    checkClick2(1560, 265, 1600, 180, "0x636363")
 }
 
 clickBlock4() {
-    checkClick(1560, 295, 1600, 180, "0x636363")
+    checkClick2(1560, 295, 1600, 180, "0x636363")
 }
 
 clickProperties() {
