@@ -106,7 +106,7 @@ clickTertiary() {
 }
 
 clickColorArrow() {
-    checkClick(1460, 75, 1450, 1165, 79, "0xFFFFFF")
+    checkClick(1460, 75, 1165, 79, "0xFFFFFF")
 }
 
 clickColor(x1, y1) {
