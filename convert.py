@@ -204,8 +204,11 @@ def generateAHK():
                     output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+')\n'
                 else:
                     output += 'MouseMove '+str(colorCoords[0])+', 443, 0\n'
-                    output += 'scroll('+str((n/4)-10)+')\n'
-                    output += 'clickColor('+str(colorCoords[0])+', 443)\n'
+                    output += 'scroll('+str(((n/4)-9)/2)+')\n'
+                    if (n/4)%2 == 0:
+                        output += 'clickColor('+str(colorCoords[0])+', 443)\n'
+                    else:
+                        output += 'clickColor('+str(colorCoords[0])+', 407)\n'
             output += 'clickRotation()\n'
             output += 'clickField1()\n'
             output += 'input(0)\n'
