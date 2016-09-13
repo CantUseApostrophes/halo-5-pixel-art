@@ -180,61 +180,50 @@ def writeInstructions():
 
 def generateAHK():
     f = open('build_image.ahk','w')
-    runtime = 60
     row = 0
     col = 0
-    s = str(2)
-    coords = [target_size[0]*(-1), 0, target_size[1]*2-250]
-    output = ''
-    #output += '\nSendMode Input\n'
-    output += click(1750, 40) # Click plus
-    output += click(1560, 230) # Click primitives
-    output += click(1560, 200) # Click simple
-    output += click(1560, 205) # Click 2'
+    with open ("ahk_functions", "r") as funcs:
+        output = funcs.read()
     for i in range(0, len(results)):
         if results[i] == 'break':
             row += 1
             col = 0
         else:
             coords = [target_size[0]*(-1)+col*2, 0, target_size[1]*2-250-row*2]
-            if results[i][1] == 1:
-                output += click(1560, 240) # Spawn 1-pixel block (2'x2'x2')
-                col += 1
-            elif results[i][1] == 2:
-                output += click(1560, 265) # Spawn 2-pixel block (2'x2'x4')
-                col += 2
-            elif results[i][1] == 4:
-                output += click(1560, 295) # Spawn 4-pixel block (2'x2'x8')
-                col += 4
-            #Clicks the Object Properties button
-            output += click(1850, 40)
-            if i == 0:
-                output += 'PixelGetColor, color, 1533, 143\nif (color = "0x000000")\n{\n\t'+click(1530, 150)+'}\n'
-            output += 'Loop '+str(23+results[i][0])+' {\n\tClick 1856, 455\n\tSleep 100\n}\n' #
-            output += 'Loop '+str(23+results[i][0])+' {\n\tClick 1856, 483\n\tSleep 100\n}\n' # Sets colors
-            output += 'Loop '+str(23+results[i][0])+' {\n\tClick 1856, 511\n\tSleep 100\n}\n' #
-            runtime += (23+i)*10*3
-            output += 'Loop 5 {\n\tClick 1856, 567\n\tSleep 100\n}\n' #
-            output += 'Loop 5 {\n\tClick 1856, 595\n\tSleep 100\n}\n' # Sets matte/metallic to 10
-            output += 'Loop 5 {\n\tClick 1856, 623\n\tSleep 100\n}\n' #
-            runtime += 5*10*3
-            output += click(1560, 315) # Click Rotation
-            output += click(1830, 207) # Click pitch left arrow
-            output += click(1518, 80) # Click the back button
-            output += click(1560, 285) # Click Position
-            output += click(1813, 177) # Click X field
-            output += 'Send ' + str(coords[0]) + '{Enter}\nSleep 100\n' # Enter X coordinates
-            output += click(1813, 205) # Click Y field
-            output += 'Send ' + str(coords[1]) + '{Enter}\nSleep 100\n' # Enter Y coordinates
-            output += click(1813, 233) # Click Z field
-            output += 'Send ' + str(coords[2]) + '{Enter}\nSleep 100\n' # Enter Z coordinates
-            output += click(1750, 40) # Click plus button
-            runtime += 280
+            output += 'clickPlus()\n'
+            output += 'checkPlusMenu()\n'
+            output += 'clickBlock'+str(results[i][1])+'()'
+            col += results[i][1]
+            output += 'clickProperties()\n'
+            for j in ['Primary', 'Secondary', 'Tertiary']:
+                output += 'click'+j+'()\n'
+                output += 'clickColorArrow()\n'
+                n = results[i][0]
+                colorCoords = [1189 + (n%4)*74, 112 + (n/4)*36]
+                if n < 40:
+                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+', '+str(colorCoords[0]+31)+', '+str(colorCoords[1]-12)+')\n'
+                else:
+                    output += 'MouseMove '+str(colorCoords[0])+', 443, 0\n'
+                    output += 'scroll('+str((n/4)-10)+')\n'
+                    output += 'clickColor('+str(colorCoords[0])+', 443, '+str(colorCoords[0]+31)+', 416)\n'
+            output += 'clickRotation()\n'
+            output += 'clickField1()\n'
+            output += 'input(0)\n'
+            output += 'clickField2()\n'
+            output += 'input(90)\n'
+            output += 'clickField3()\n'
+            output += 'input(0)\n'
+            output += 'clickArrowToPosition()\n'
+            output += 'clickField1()\n'
+            output += 'input('+str(coords[0])+')\n'
+            output += 'clickField2()\n'
+            output += 'input(0)\n'
+            output += 'clickField3()\n'
+            output += 'input('+str(coords[2])+')\n'
     output += 'Send {Escape}\n'
     output += 'Escape::ExitApp\n' # Sets Esc key to terminate script
     f.write(output)
     f.close()
-    print 'Runtime:',(runtime/1000.)/60.,'min'
 
 def click(x, y):
     return 'MouseMove ' + str(x) + ', ' + str(y) + ', 5\nClick ' + str(x) + ', ' + str(y) + '\n'
