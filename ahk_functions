@@ -6,10 +6,10 @@ click(x, y) {
     Click %x%, %y%, up
 }
 
-checkClick(x1, y1, x2, y2, color) {
+checkClick(x1, y1, x2, y2, color, slp:=200) {
     Loop {
         click(x1, y1)
-        Sleep 200
+        Sleep %slp%
         PixelGetColor px, %x2%, %y2%, RGB
         if (px = color) {
             Break
@@ -17,10 +17,10 @@ checkClick(x1, y1, x2, y2, color) {
     }
 }
 
-checkClick2(x1, y1, x2, y2, color) {
+checkClick2(x1, y1, x2, y2, color, slp:=200) {
     Loop {
         click(x1, y1)
-        Sleep 200
+        Sleep %slp%
         PixelGetColor px, %x2%, %y2%, RGB
         if (px != color) {
             Break
@@ -78,19 +78,19 @@ clickRotation() {
 }
 
 clickArrowToPosition() {
-    checkClick(1855, 150, 1530, 154, "0xFDFDFD")
+    checkClick2(1855, 150, 1530, 154, "0xFDFDFD")
 }
 
 clickField1() {
-    checkClick(1813, 177, 1752, 188, "0x3399FF")
+    checkClick(1813, 177, 1751, 187, "0x3399FF")
 }
 
 clickField2() {
-    checkClick(1813, 205, 1752, 216, "0x3399FF")
+    checkClick(1813, 205, 1751, 215, "0x3399FF")
 }
 
 clickField3() {
-    checkClick(1813, 233, 1752, 244, "0x3399FF")
+    checkClick(1813, 233, 1751, 243, "0x3399FF")
 }
 
 clickPrimary() {
@@ -128,7 +128,7 @@ scroll(n) {
 }
 
 input(txt) {
-    Send, %txt%
+    Send, %txt%{Enter}
 }
 
 Sleep 5000
