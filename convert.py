@@ -210,7 +210,7 @@ def generateAHK():
             output += 'clickField1()\n'
             output += 'input(0)\n'
             output += 'clickField2()\n'
-            output += 'input(90)\n'
+            output += 'input(-90)\n'
             output += 'clickField3()\n'
             output += 'input(0)\n'
             output += 'clickArrowToPosition()\n'
