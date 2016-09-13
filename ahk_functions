@@ -1,16 +1,16 @@
 click(x, y) {
-    MouseMove x, y, 0
+    MouseMove %x%, %y%, 0
     Sleep 100
-    Click x, y, down
+    Click %x%, %y%, down
     Sleep 250
-    Click x, y, up
+    Click %x%, %y%, up
 }
 
 checkClick(x1, y1, x2, y2, color) {
     Loop {
         click(x1, y1)
         Sleep 100
-        PixelGetColor px, x2, y2, RGB
+        PixelGetColor px, %x2%, %y2%, RGB
         if (px = color) {
             Break
         }
@@ -21,7 +21,7 @@ checkClick2(x1, y1, x2, y2, color) {
     Loop {
         click(x1, y1)
         Sleep 100
-        PixelGetColor px, x2, y2, RGB
+        PixelGetColor px, %x2%, %y2%, RGB
         if (px != color) {
             Break
         }
