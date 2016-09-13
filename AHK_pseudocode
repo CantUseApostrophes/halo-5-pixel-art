@@ -1,0 +1,81 @@
+click(x, y) {
+    Click x, y, down
+    Sleep 250
+    Click x, y, up
+}
+
+checkClick(x1, y1, x2, y2, color) {
+    Loop {
+        click(x1, y1)
+        getPixelColor(x2, y2, px)
+        if (px = color) {
+            Break
+        }
+    }
+}
+
+clickPlus() {
+    checkClick()
+}
+
+clickPrimitives() {
+    checkClick()
+}
+
+clickSimple() {
+    checkClick()
+}
+
+click2ft() {
+    checkClick()
+}
+
+checkPlusMenu() {
+    getPixelColor($x, $y)
+    if (color = $something) {
+        goToBlocks()
+    }
+}
+
+goToBlocks() {
+    clickPrim()
+    clickSimple()
+    click2ft()
+}
+
+clickBlock1() {
+    checkClick()
+}
+
+clickBlock2() {
+    checkClick()
+}
+
+clickBlock4() {
+    checkClick()
+}
+
+clickProperties() {
+    checkClick()
+}
+
+clickRotation() {
+    checkClick()
+}
+
+clickArrowToPosition() {
+    checkClick()
+}
+
+clickField1() {
+    checkClick()
+}
+
+clickField2() {
+    checkClick()
+}
+
+clickField3() {
+    checkClick()
+}
+
