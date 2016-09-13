@@ -39,8 +39,6 @@ instructions_mode = config.getint('options', 'instructions_mode')
 
 image = Image.open(input_name)
 
-alpha = []
-
 results = [] # stores a list of colors
 
 target_size = [] # stores the dimensions of the resized image
@@ -60,7 +58,7 @@ def printInfo():
     print 'Max resolution:', max_width * max_height
 
 def resizeImage():
-    global image, target_size, alpha
+    global image, target_size
 
     if native_res:
         resize_factor = 1
@@ -74,7 +72,6 @@ def resizeImage():
         printResizeInfo(resize_factor)
 
     image = image.resize((int(image.size[0]/resize_factor), int(image.size[1]/resize_factor)), resample_mode)
-    alpha = list(image.getdata(3))
 
 def printResizeInfo(resize_factor):
     print 'Target width:', target_size[0]
@@ -86,10 +83,7 @@ def adjustColors():
     pixel = image.load()
     for j in range(0,image.size[1]):
       for i in range(0,image.size[0]):
-          if alpha[j*image.size[0]+i] == 0 and instructions_mode == 4:
-              results.append([-1, 1])
-          else:
-              pixel[i,j] = nearestColor(image.getpixel((i,j)))
+          pixel[i,j] = nearestColor(image.getpixel((i,j)))
 
 def nearestColor(rgb1):
     min_dist = 442
@@ -148,29 +142,24 @@ def slimResults_AHK():
         while i < len(results) - n and results[i] == results[i+n] and results[i+n] != 'break':
             n += 1
         if n > 1:
-            if results[i][0] == -1:
-                results.insert(i, [-1, n])
-                for j in range(0, n):
-                    results.pop(i+1)
-            else:
-                temp_color = results[i][0]
-                index_adjust = 0 # Need to adjust index each loop so that we don't "slim" data more than once
-                for j in range(0, n):
-                    results.pop(i)
-                for j in range(0, n/4):
-                    results.insert(i, [temp_color, 4])
-                index_adjust += n/4
-                if n%4 == 1:
-                    results.insert(i+n/4, [temp_color, 1])
-                    index_adjust += 1
-                elif n%4 == 2:
-                    results.insert(i+n/4, [temp_color, 2])
-                    index_adjust += 1
-                elif n%4 == 3:
-                    results.insert(i+n/4, [temp_color, 2])
-                    results.insert(i+n/4+1, [temp_color, 1])
-                    index_adjust += 2
-                i += index_adjust
+            temp_color = results[i][0]
+            index_adjust = 0 # Need to adjust index each loop so that we don't "slim" data more than once
+            for j in range(0, n):
+                results.pop(i)
+            for j in range(0, n/4):
+                results.insert(i, [temp_color, 4])
+            index_adjust += n/4
+            if n%4 == 1:
+                results.insert(i+n/4, [temp_color, 1])
+                index_adjust += 1
+            elif n%4 == 2:
+                results.insert(i+n/4, [temp_color, 2])
+                index_adjust += 1
+            elif n%4 == 3:
+                results.insert(i+n/4, [temp_color, 2])
+                results.insert(i+n/4+1, [temp_color, 1])
+                index_adjust += 2
+            i += index_adjust
         else:
             i += 1
     if print_info:
@@ -199,8 +188,6 @@ def generateAHK():
         if results[i] == 'break':
             row += 1
             col = 0
-        elif results[i][0] == -1:
-            col += results[i][0]
         else:
             coords = [target_size[0]*(-1)+col*2, 0, target_size[1]*2-250-row*2]
             output += 'clickPlus()\n'
