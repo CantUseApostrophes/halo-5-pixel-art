@@ -188,7 +188,7 @@ def generateAHK():
             coords = [target_size[0]*(-1)+col*2, 0, target_size[1]*2-250-row_*2]
             output += 'clickPlus()\n'
             output += 'checkPlusMenu()\n'
-            output += 'clickBlock'+str(row[i][1])+'()'
+            output += 'clickBlock'+str(row[i][1])+'()\n'
             col += row[i][1]
             output += 'clickProperties()\n'
             for j in ['Primary', 'Secondary', 'Tertiary']:
@@ -219,7 +219,7 @@ def generateAHK():
             output += 'input('+str(coords[2])+')\n'
         row_ += 1
         col = 0
-    output += 'Send {Escape}\n'
+    output += 'MsgBox % FormatSeconds((A_TickCount-StartTime)/1000)\n'
     output += 'Escape::ExitApp\n' # Sets Esc key to terminate script
     f.write(output)
     f.close()
