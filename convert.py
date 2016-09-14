@@ -43,6 +43,15 @@ results = [] # stores a list of colors
 
 target_size = [] # stores the dimensions of the resized image
 
+alpha = []
+
+alpha_list = list(image.getdata(3))
+
+for i in range(0, image.size[1]):
+    alpha.append(alpha_list[i*image.size[0] : i*image.size[0]+image.size[0]])
+
+alpha_threshold = config.getint('AHK options', 'transparency_threshold')
+
 def printInfo():
     print 'Image dimensions:', image.width, 'x', image.height
 
@@ -84,9 +93,9 @@ def adjustColors():
     for j in range(0,image.size[1]):
         results.append([])
         for i in range(0,image.size[0]):
-            pixel[i,j] = nearestColor(image.getpixel((i,j)), j)
+            pixel[i,j] = nearestColor(image.getpixel((i,j)), j, i)
 
-def nearestColor(rgb1, row):
+def nearestColor(rgb1, row, col):
     min_dist = 442
     mindex = -1
     for i in range(0, 128):
@@ -109,7 +118,10 @@ def nearestColor(rgb1, row):
         # Adds row and column numbers of each color to make it easier to find in PC color picker menu
         results[row].append('('+str(mindex/4+1)+','+str(mindex%4+1)+')'+color_names[mindex])
     else:
-        results[row].append([mindex, 1])
+        if alpha[row][col] <= alpha_threshold:
+            results[row].append([-1, 1])
+        else:
+            results[row].append([mindex, 1])
     return (colors_rgb[mindex][0], colors_rgb[mindex][1], colors_rgb[mindex][2])
 
 def slimResults():
@@ -143,20 +155,23 @@ def slimResults_AHK():
                 index_adjust = 0 # Need to adjust index each loop so that we don't "slim" data more than once
                 for j in range(0, n):
                     row.pop(i)
-                for j in range(0, n/4):
-                    row.insert(i, [temp_color, 4])
-                index_adjust += n/4
-                if n%4 == 1:
-                    row.insert(i+n/4, [temp_color, 1])
-                    index_adjust += 1
-                elif n%4 == 2:
-                    row.insert(i+n/4, [temp_color, 2])
-                    index_adjust += 1
-                elif n%4 == 3:
-                    row.insert(i+n/4, [temp_color, 2])
-                    row.insert(i+n/4+1, [temp_color, 1])
-                    index_adjust += 2
-                i += index_adjust
+                if temp_color == -1:
+                    row.insert(i, [-1, n])
+                else:
+                    for j in range(0, n/4):
+                        row.insert(i, [temp_color, 4])
+                    index_adjust += n/4
+                    if n%4 == 1:
+                        row.insert(i+n/4, [temp_color, 1])
+                        index_adjust += 1
+                    elif n%4 == 2:
+                        row.insert(i+n/4, [temp_color, 2])
+                        index_adjust += 1
+                    elif n%4 == 3:
+                        row.insert(i+n/4, [temp_color, 2])
+                        row.insert(i+n/4+1, [temp_color, 1])
+                        index_adjust += 2
+                    i += index_adjust
             else:
                 i += 1
     if print_info:
