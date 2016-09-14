@@ -196,7 +196,7 @@ def generateAHK():
                 output += 'clickColorArrow()\n'
                 n = row[i][0]
                 colorCoords = [1189 + (n%4)*74, 112 + (n/4)*36]
-                label = 'Label_'+str(row_)+'_'+str(col)
+                label = 'Label_'+str(row_)+'_'+str(col)+'_'+j
                 output += label + ':\n'
                 if n < 40:
                     output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+', '+colors_hex[n]+', '+j+', '+label+')\n'
