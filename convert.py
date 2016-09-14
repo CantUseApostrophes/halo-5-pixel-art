@@ -1,4 +1,4 @@
-from colors import color_names, colors_rgb
+from colors import color_names, colors_rgb, colors_hex
 from PIL import Image
 import math, ConfigParser, io
 
@@ -196,11 +196,13 @@ def generateAHK():
                 output += 'clickColorArrow()\n'
                 n = row[i][0]
                 colorCoords = [1189 + (n%4)*74, 112 + (n/4)*36]
+                label = 'Label_'+str(row)+'_'+str(col)
+                output += label + ':\n'
                 if n < 40:
-                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+')\n'
+                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+', '+colors_hex[n]+', '+j+', '+label+')\n'
                 else:
-                    output += 'dragBar('+str(n/4-9)+')'
-                    output += 'clickColor('+str(colorCoords[0])+', 443)\n'
+                    output += 'dragBar('+str(n/4-9)+')\n'
+                    output += 'clickColor('+str(colorCoords[0])+', 443, '+colors_hex[n]+', '+j+', '+label+')\n'
             output += 'clickRotation()\n'
             output += 'clickField1()\n'
             output += 'input(0)\n'

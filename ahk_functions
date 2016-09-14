@@ -109,9 +109,9 @@ clickColorArrow() {
     checkClick(1460, 75, 1165, 79, "0xFFFFFF")
 }
 
-clickColor(x1, y1) {
+clickColorBox(x, y) {
   Loop {
-      click(x1, y1)
+      click(x, y)
       Sleep 100
       PixelGetColor px, 1450, 100, RGB
       if (px != "0x4D4D4D" and px != "0x1A1A1A") {
@@ -120,10 +120,49 @@ clickColor(x1, y1) {
   }
 }
 
+checkColor(color1, n) {
+    if (n = "Primary") {
+        y := 455
+    }
+    else if (n = "Secondary") {
+        y := 485
+    }
+    else if (n = "Tertiary") {
+        y := 510
+    }
+    PixelGetColor color2, 1800, %y%
+    if ("0x" . color1 = color2) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+clickColor(x, y, color, n, label) {
+    clickColorBox(x, y)
+    Sleep 100
+    if (not checkColor(color, n)) {
+        if (n = "Primary") {
+            clickPrimary()
+        }
+        else if (n = "Secondary") {
+            clickSecondary()
+        }
+        else if (n = "Tertiary") {
+            clickTertiary()
+        }
+        MouseMove 1183, 112, 0
+        Sleep 100
+        scroll(15)
+        Sleep 100
+        Goto %label%
+    }
+}
+
 scroll(n) {
     Loop %n% {
-        Sleep 100
-        Click WheelDown
+        Click WheelUp
     }
 }
 
