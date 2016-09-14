@@ -203,7 +203,7 @@ def generateAHK():
                 else:
                     output += 'dragBar('+str(n/4-9)+')\n'
                     output += 'clickColor('+str(colorCoords[0])+', 443)\n'
-                output += 'if (checkColor('+colors_hex[n]+', '+j+')) {\n\tGoto '+label+'\n}\n'
+                output += 'if (checkColor("'+colors_hex[n]+'", "'+j+'")) {\n\tGoto '+label+'\n}\n'
             output += 'clickRotation()\n'
             output += 'clickField1()\n'
             output += 'input(0)\n'
@@ -222,6 +222,7 @@ def generateAHK():
         col = 0
     output += 'MsgBox % FormatSeconds((A_TickCount-StartTime)/1000)\n'
     output += 'Escape::ExitApp\n' # Sets Esc key to terminate script
+    output += '+Escape::Pause Toggle\n' # Sets Shift + Esc to pause script
     f.write(output)
     f.close()
 

@@ -130,21 +130,30 @@ checkColor(color1, n) {
     else if (n = "Tertiary") {
         y := 510
     }
-    PixelGetColor color2, 1800, %y%
+    PixelGetColor color2, 1800, %y%, RGB
     if ("0x" . color1 = color2) {
         return false
     }
     else {
+        if (n = "Primary") {
+            clickPrimary()
+        }
+        else if (n = "Secondary") {
+            clickSecondary()
+        }
+        else if (n = "Tertiary") {
+            clickTertiary()
+        }
         MouseMove 1183, 112, 0
         Sleep 100
-        scroll(15)
-        Sleep 100
+        scroll(16)
         return true
     }
 }
 
 scroll(n) {
     Loop %n% {
+        Sleep 50
         Click WheelUp
     }
 }
