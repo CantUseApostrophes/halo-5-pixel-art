@@ -199,10 +199,11 @@ def generateAHK():
                 label = 'Label_'+str(row_)+'_'+str(col)+'_'+j
                 output += label + ':\n'
                 if n < 40:
-                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+', '+colors_hex[n]+', '+j+', '+label+')\n'
+                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+')\n'
                 else:
                     output += 'dragBar('+str(n/4-9)+')\n'
-                    output += 'clickColor('+str(colorCoords[0])+', 443, '+colors_hex[n]+', '+j+', '+label+')\n'
+                    output += 'clickColor('+str(colorCoords[0])+', 443)\n'
+                output += 'if (checkColor('+colors_hex[n]+', '+j+')) {\n\tGoto '+label+'\n}\n'
             output += 'clickRotation()\n'
             output += 'clickField1()\n'
             output += 'input(0)\n'

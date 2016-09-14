@@ -109,7 +109,7 @@ clickColorArrow() {
     checkClick(1460, 75, 1165, 79, "0xFFFFFF")
 }
 
-clickColorBox(x, y) {
+clickColor(x, y) {
   Loop {
       click(x, y)
       Sleep 100
@@ -132,31 +132,14 @@ checkColor(color1, n) {
     }
     PixelGetColor color2, 1800, %y%
     if ("0x" . color1 = color2) {
-        return true
-    }
-    else {
         return false
     }
-}
-
-clickColor(x, y, color, n, label) {
-    clickColorBox(x, y)
-    Sleep 100
-    if (not checkColor(color, n)) {
-        if (n = "Primary") {
-            clickPrimary()
-        }
-        else if (n = "Secondary") {
-            clickSecondary()
-        }
-        else if (n = "Tertiary") {
-            clickTertiary()
-        }
+    else {
         MouseMove 1183, 112, 0
         Sleep 100
         scroll(15)
         Sleep 100
-        Goto %label%
+        return true
     }
 }
 
