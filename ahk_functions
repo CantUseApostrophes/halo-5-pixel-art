@@ -195,6 +195,14 @@ FormatSeconds(NumberOfSeconds) {
     return NumberOfSeconds//3600 ":" mmss
 }
 
-Sleep 5000
+Loop {
+    Sleep 1000
+    IfWinActive Halo 5: Forge
+    {
+        Break
+    }
+}
 SendMode Event
 BlockInput MouseMove
+
+StartTime := A_TickCount
