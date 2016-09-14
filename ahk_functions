@@ -1,12 +1,12 @@
 click(x, y) {
     MouseMove %x%, %y%, 0
-    Sleep 200
+    Sleep 50
     Click %x%, %y%, down
-    Sleep 250
+    Sleep 75
     Click %x%, %y%, up
 }
 
-checkClick(x1, y1, x2, y2, color, slp:=200) {
+checkClick(x1, y1, x2, y2, color, slp:=75) {
     Loop {
         click(x1, y1)
         Sleep %slp%
@@ -17,7 +17,7 @@ checkClick(x1, y1, x2, y2, color, slp:=200) {
     }
 }
 
-checkClick2(x1, y1, x2, y2, color, slp:=200) {
+checkClick2(x1, y1, x2, y2, color, slp:=75) {
     Loop {
         click(x1, y1)
         Sleep %slp%
@@ -70,7 +70,7 @@ clickBlock4() {
 }
 
 clickProperties() {
-    checkClick(1850, 40, 1600, 80, "0x303030")
+    checkClick(1850, 40, 1600, 80, "0x303030", 150)
 }
 
 clickRotation() {
@@ -94,25 +94,45 @@ clickField3() {
 }
 
 clickPrimary() {
-    checkClick(1800, 455, 1450, 100, "0x1A1A1A")
+    Loop {
+        click(1800, 455)
+        Sleep 75
+        PixelGetColor px, 1450, 100, RGB
+        if (px = "0x1A1A1A" or px = "0x4D4D4D") {
+            Break
+        }
+    }
 }
 
 clickSecondary() {
-    checkClick(1800, 485, 1450, 100, "0x1A1A1A")
+    Loop {
+        click(1800, 485)
+        Sleep 75
+        PixelGetColor px, 1450, 100, RGB
+        if (px = "0x1A1A1A" or px = "0x4D4D4D") {
+            Break
+        }
+    }
 }
 
 clickTertiary() {
-    checkClick(1800, 510, 1450, 100, "0x1A1A1A")
+    Loop {
+        click(1800, 510)
+        Sleep 75
+        PixelGetColor px, 1450, 100, RGB
+        if (px = "0x1A1A1A" or px = "0x4D4D4D") {
+            Break
+        }
+    }
 }
 
 clickColorArrow() {
-    checkClick(1460, 75, 1165, 79, "0xFFFFFF")
+    checkClick(1460, 75, 1165, 79, "0xFFFFFF", 150)
 }
 
 clickColor(x, y) {
   Loop {
       click(x, y)
-      Sleep 100
       PixelGetColor px, 1450, 100, RGB
       if (px != "0x4D4D4D" and px != "0x1A1A1A") {
           Break
@@ -161,12 +181,12 @@ scroll(n) {
 dragBar(n) {
     Loop {
         MouseMove 1457, 150, 0
-        Sleep 200
-        Click 1457, 150, down
         Sleep 100
+        Click 1457, 150, down
+        Sleep 50
         var := 150 + (n*11)
         MouseMove 1457, %var%, 5
-        Sleep 100
+        Sleep 50
         Click 1457, %var%, up
         PixelGetColor color, 1450, 95, RGB
         if (color = "0x1A1A1A") {
