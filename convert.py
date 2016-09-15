@@ -177,7 +177,9 @@ def slimResults_AHK():
     if print_info:
         count = 0
         for row in results:
-            count += len(row)
+            for i in row:
+                if i[0] != -1:
+                    count += 1
         print 'Object count:', count
 
 def writeInstructions():
@@ -201,41 +203,47 @@ def generateAHK():
     for row in results:
         for i in range(0, len(row)):
             coords = [target_size[0]*(-1)+col*2, 0, target_size[1]*2-250-row_*2]
-            output += 'clickPlus()\n'
-            output += 'checkPlusMenu()\n'
-            output += 'clickBlock'+str(row[i][1])+'()\n'
             col += row[i][1]
-            output += 'clickProperties()\n'
-            for j in ['Primary', 'Secondary', 'Tertiary']:
-                output += 'click'+j+'()\n'
-                output += 'clickColorArrow()\n'
-                n = row[i][0]
-                colorCoords = [1189 + (n%4)*74, 112 + (n/4)*36]
-                label = 'Label_'+str(row_)+'_'+str(col)+'_'+j
-                output += label + ':\n'
-                if n < 40:
-                    output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+')\n'
-                else:
-                    output += 'dragBar('+str(n/4-9)+')\n'
-                    output += 'clickColor('+str(colorCoords[0])+', 443)\n'
-                output += 'if (checkColor("'+colors_hex[n]+'", "'+j+'")) {\n\tGoto '+label+'\n}\n'
-            output += 'clickRotation()\n'
-            output += 'clickField1()\n'
-            output += 'input(0)\n'
-            output += 'clickField2()\n'
-            output += 'input(-90)\n'
-            output += 'clickArrowToPosition()\n'
-            output += 'clickField1()\n'
-            output += 'input('+str(coords[0])+')\n'
-            output += 'clickField2()\n'
-            output += 'input(0)\n'
-            output += 'clickField3()\n'
-            output += 'input('+str(coords[2])+')\n'
+            if row[i][0] != -1:
+                output += 'clickPlus()\n'
+                output += 'checkPlusMenu()\n'
+                output += 'clickBlock'+str(row[i][1])+'()\n'
+                output += 'clickProperties()\n'
+                for j in ['Primary', 'Secondary', 'Tertiary']:
+                    output += 'click'+j+'()\n'
+                    n = row[i][0]
+                    colorCoords = [1189 + (n%4)*74, 112 + (n/4)*36]
+                    label = 'Label_'+str(row_)+'_'+str(col)+'_'+j
+                    output += label + ':\n'
+                    output += 'if (checkReference())\n\tclickColorArrow()\n'
+                    if n < 40:
+                        output += 'clickColor('+str(colorCoords[0])+', '+str(colorCoords[1])+')\n'
+                    else:
+                        output += 'dragBar('+str(n/4-9)+')\n'
+                        output += 'clickColor('+str(colorCoords[0])+', 443)\n'
+                    output += 'if (checkColor("'+colors_hex[n]+'", "'+j+'"))\n\tGoto '+label+'\n'
+                output += 'clickRotation()\n'
+                output += 'clickField1()\n'
+                output += 'input(0)\n'
+                output += 'clickField2()\n'
+                output += 'input(-90)\n'
+                output += 'clickArrowToPosition()\n'
+                output += 'clickField1()\n'
+                output += 'input('+str(coords[0])+')\n'
+                output += 'clickField2()\n'
+                output += 'input(0)\n'
+                output += 'clickField3()\n'
+                output += 'input('+str(coords[2])+')\n'
+                output += 'if (pause_var1 = 1) {\n\tBlockInput MouseMoveOff\n\tPause On\n}\n'
         row_ += 1
         col = 0
-    output += 'MsgBox % FormatSeconds((A_TickCount-StartTime)/1000)\n'
-    output += 'Escape::ExitApp\n' # Sets Esc key to terminate script
-    output += '+Escape::Pause Toggle\n' # Sets Shift + Esc to pause script
+    output += 'BlockInput MouseMoveOff\n'
+    output += 'time_elapsed := FormatSeconds((A_TickCount-StartTime)/1000)\n'
+    output += 'MsgBox Build time:`n%time_elapsed%\n'
+    output += 'ExitApp\n'
+    output += 'F1::\nBlockInput MouseMoveOff\nExitApp\nreturn\n' # Sets F1 to terminate script
+    output += 'F2::\nPause Off\nBlockInput MouseMove\nif (pause_var1 = 0)\n\tpause_var1 := 1\nelse\n\tpause_var1 := 0\nreturn\n' # Sets F2 to pause script when finished with current object
+    output += 'F3::\nPause Off\nBlockInput MouseMove\nif (pause_var2 = 0) {\n\tpause_var2 := 1\n\tBlockInput MouseMoveOff\n\tPause On\n}\nelse\n\tpause_var2 := 0\nreturn\n' # Sets F3 to pause script immediately
     f.write(output)
     f.close()
 
