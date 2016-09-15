@@ -78,8 +78,10 @@ def resizeImage():
         printResizeInfo(resize_factor)
 
     image = image.resize((int(image.size[0]/resize_factor), int(image.size[1]/resize_factor)), resample_mode)
-    
-    alpha_list = list(image.getdata(3))
+    try:
+        alpha_list = list(image.getdata(3))
+    except:
+        alpha_list = [255]*(image.size[0]*image.size[1])
     if instructions_mode == 4:
         for i in range(0, image.size[1]):
             alpha.append(alpha_list[i*image.size[0] : i*image.size[0]+image.size[0]])
@@ -120,7 +122,7 @@ def nearestColor(rgb1, row, col):
         # Adds row and column numbers of each color to make it easier to find in PC color picker menu
         results[row].append('('+str(mindex/4+1)+','+str(mindex%4+1)+')'+color_names[mindex])
     else:
-        if alpha[row][col] <= alpha_threshold:
+        if alpha[row][col] < alpha_threshold:
             results[row].append([-1, 1])
         else:
             results[row].append([mindex, 1])
