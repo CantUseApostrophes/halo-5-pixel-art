@@ -45,10 +45,7 @@ target_size = [] # stores the dimensions of the resized image
 
 alpha = []
 
-alpha_list = list(image.getdata(3))
-
-for i in range(0, image.size[1]):
-    alpha.append(alpha_list[i*image.size[0] : i*image.size[0]+image.size[0]])
+alpha_list = []
 
 alpha_threshold = config.getint('AHK options', 'transparency_threshold')
 
@@ -67,7 +64,7 @@ def printInfo():
     print 'Max resolution:', max_width * max_height
 
 def resizeImage():
-    global image, target_size
+    global image, target_size, alpha, alpha_list
 
     if native_res:
         resize_factor = 1
@@ -81,6 +78,11 @@ def resizeImage():
         printResizeInfo(resize_factor)
 
     image = image.resize((int(image.size[0]/resize_factor), int(image.size[1]/resize_factor)), resample_mode)
+    
+    alpha_list = list(image.getdata(3))
+    if instructions_mode == 4:
+        for i in range(0, image.size[1]):
+            alpha.append(alpha_list[i*image.size[0] : i*image.size[0]+image.size[0]])
 
 def printResizeInfo(resize_factor):
     print 'Target width:', target_size[0]
