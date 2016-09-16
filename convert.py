@@ -238,6 +238,7 @@ def generateAHK():
                 output += 'input(0)\n'
                 output += 'clickField3()\n'
                 output += 'input('+str(coords[2])+')\n'
+                output += 'clickSave()\n'
                 output += 'if (pause_var1 = 1) {\n\tBlockInput MouseMoveOff\n\tPause On\n}\n'
         row_ += 1
         col = 0
