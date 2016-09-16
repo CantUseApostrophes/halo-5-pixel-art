@@ -1,12 +1,13 @@
-click(x, y) {
+click(x, y, slp = 75) {
     MouseMove %x%, %y%, 0
-    Sleep 50
+    Sleep %slp%
     Click %x%, %y%, down
     Sleep 75
     Click %x%, %y%, up
 }
 
 checkClick(x1, y1, x2, y2, color, slp:=75) {
+    count := 0
     Loop {
         click(x1, y1)
         Sleep %slp%
@@ -14,16 +15,33 @@ checkClick(x1, y1, x2, y2, color, slp:=75) {
         if (px = color) {
             Break
         }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            Sleep 100
+        }
     }
 }
 
 checkClick2(x1, y1, x2, y2, color, slp:=75) {
+    count := 0
     Loop {
         click(x1, y1)
         Sleep %slp%
         PixelGetColor px, %x2%, %y2%, RGB
         if (px != color) {
             Break
+        }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            Sleep 100
         }
     }
 }
@@ -94,41 +112,84 @@ clickField3() {
 }
 
 clickPrimary() {
+    count := 0
     Loop {
         click(1800, 483)
-        Sleep 75
+        Sleep 100
         PixelGetColor px, 1450, 100, RGB
         if (px = "0x1A1A1A" or px = "0x4D4D4D") {
             Break
+        }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            Sleep 100
         }
     }
 }
 
 clickSecondary() {
+    count := 0
     Loop {
         click(1800, 513)
-        Sleep 75
+        Sleep 100
         PixelGetColor px, 1450, 100, RGB
         if (px = "0x1A1A1A" or px = "0x4D4D4D") {
             Break
+        }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            Sleep 100
         }
     }
 }
 
 clickTertiary() {
+    count := 0
     Loop {
         click(1800, 538)
-        Sleep 75
+        Sleep 100
         PixelGetColor px, 1450, 100, RGB
         if (px = "0x1A1A1A" or px = "0x4D4D4D") {
             Break
+        }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            Sleep 100
         }
     }
 }
 
 clickColorArrow() {
-    Sleep 100
-    checkClick(1460, 75, 1165, 79, "0xFFFFFF", 150)
+    checkClick(1460, 75, 1165, 79, , 150)
+    count := 0
+    Loop {
+        click(1460, 75)
+        Sleep 75
+        PixelGetColor px, 1165, 79, RGB
+        if (px = "0xFFFFFF") {
+            Break
+        }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            clickTertiary()
+        }
+    }
 }
 
 CheckReference() {
@@ -143,13 +204,23 @@ CheckReference() {
 }
 
 clickColor(x, y) {
-  Loop {
-      click(x, y)
-      PixelGetColor px, 1450, 100, RGB
-      if (px != "0x4D4D4D" and px != "0x1A1A1A") {
-          Break
-      }
-  }
+    count := 0
+    Loop {
+        click(x, y)
+        PixelGetColor px, 1450, 100, RGB
+        if (px != "0x4D4D4D" and px != "0x1A1A1A") {
+            Break
+        }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            clickTertiary()
+            clickColorArrow()
+        }
+    }
 }
 
 checkColor(color1, n) {
@@ -191,6 +262,7 @@ scroll(n) {
 }
 
 dragBar(n) {
+    count := 0
     Loop {
         MouseMove 1457, 150, 0
         Sleep 100
@@ -204,7 +276,20 @@ dragBar(n) {
         if (color = "0x1A1A1A") {
             Break
         }
+        count := count + 1
+        if (count > 5) {
+            count := 0
+            click(960, 580, 100)
+            Sleep 300
+            clickProperties()
+            clickTertiary()
+            clickColorArrow()
+        }
     }
+}
+
+clickSave() {
+    click(42, 44)
 }
 
 input(txt) {
